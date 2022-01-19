@@ -1,6 +1,6 @@
 package com.shpakovskiy.soundanalyser.repository;
 
-import com.shpakovskiy.soundanalyser.common.utils.RawAudioConverter;
+import com.shpakovskiy.soundanalyser.common.utils.sound.RawAudioConverter;
 import com.shpakovskiy.soundanalyser.model.Sound;
 
 import javax.sound.sampled.AudioInputStream;

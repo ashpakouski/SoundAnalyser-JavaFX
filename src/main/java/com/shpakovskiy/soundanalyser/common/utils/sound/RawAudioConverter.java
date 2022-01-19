@@ -1,4 +1,4 @@
-package com.shpakovskiy.soundanalyser.common.utils;
+package com.shpakovskiy.soundanalyser.common.utils.sound;
 
 public class RawAudioConverter {
 
