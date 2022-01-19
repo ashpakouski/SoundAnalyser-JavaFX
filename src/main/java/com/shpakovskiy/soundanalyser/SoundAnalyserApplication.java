@@ -7,12 +7,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class SoundAnalyserApplication extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(SoundAnalyserApplication.class.getResource("views/MainView.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
+        stage.setTitle("Sound analyzer");
         stage.setScene(scene);
         stage.show();
     }
