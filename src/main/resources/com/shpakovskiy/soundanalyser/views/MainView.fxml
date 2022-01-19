@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:controller="com.shpakovskiy.soundanalyser.controller.MainController"
+            xmlns:fx="http://javafx.com/fxml">
+
+    <top>
+        <MenuBar fx:id="appMenu">
+            <Menu text="File">
+                <MenuItem text="Open" onAction="#onButtonOpenAction"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+        <LineChart fx:id="signalView" animated="false">
+            <xAxis>
+                <NumberAxis prefWidth="Infinity" side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis prefHeight="Infinity" side="LEFT"/>
+            </yAxis>
+        </LineChart>
+    </center>
+
+    <bottom>
+        <ScrollBar/>
+    </bottom>
+
+</BorderPane>
+
+        <!--<VBox fx:controller="com.shpakovskiy.soundanalyser.controller.MainController"-->
+        <!--      xmlns:fx="http://javafx.com/fxml">-->
+
+        <!--    <MenuBar fx:id="appMenu">-->
+        <!--        <Menu text="File">-->
+        <!--            <MenuItem text="Open" onAction="#onButtonOpenAction"/>-->
+        <!--        </Menu>-->
+        <!--    </MenuBar>-->
+
+        <!--    <Pane prefHeight="500.0" prefWidth="1000.0">-->
+        <!--        <LineChart fx:id="signalView" animated="false" prefHeight="500.0" prefWidth="1000.0">-->
+        <!--            <xAxis>-->
+        <!--                <NumberAxis prefWidth="Infinity" side="BOTTOM"/>-->
+        <!--            </xAxis>-->
+        <!--            <yAxis>-->
+        <!--                <NumberAxis prefHeight="Infinity" side="LEFT"/>-->
+        <!--            </yAxis>-->
+        <!--        </LineChart>-->
+        <!--    </Pane>-->
+        <!--</VBox>-->
