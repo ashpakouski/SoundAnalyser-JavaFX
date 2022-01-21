@@ -2,7 +2,7 @@ package com.shpakovskiy.soundanalyser.model;
 
 public class Sound {
     private final float sampleRate;
-    private final int sampleSizeBytes;
+    private final int sampleSizeBytes; //In some sources "Sample size" is called "Bit depth"
     private final int[] rawValues;
 
     public Sound(float sampleRate, int sampleSizeBytes, int[] rawValues) {
