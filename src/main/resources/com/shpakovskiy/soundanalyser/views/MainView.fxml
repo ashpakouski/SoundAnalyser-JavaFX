@@ -14,7 +14,7 @@
     <top>
         <MenuBar fx:id="appMenu">
             <Menu text="File">
-                <MenuItem text="Open" onAction="#onButtonOpenAction"/>
+                <MenuItem text="Open (⌘O)" onAction="#onButtonOpenAction" />
             </Menu>
         </MenuBar>
     </top>

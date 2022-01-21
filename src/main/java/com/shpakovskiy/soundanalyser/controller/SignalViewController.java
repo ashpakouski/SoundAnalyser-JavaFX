@@ -7,17 +7,17 @@ import com.shpakovskiy.soundanalyser.common.utils.ui.ChartHelper;
 import com.shpakovskiy.soundanalyser.model.Sound;
 import com.shpakovskiy.soundanalyser.repository.DefaultSoundRepository;
 import com.shpakovskiy.soundanalyser.repository.SoundRepository;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.input.*;
 
-public class SignalViewController {
+public class SignalViewController implements KeyEventListener {
 
     private final SoundRepository soundRepository = new DefaultSoundRepository();
     private Sound currentSound;
+    private int currentOffset = 0;
 
     @FXML
     public MenuBar appMenu;
@@ -36,17 +36,33 @@ public class SignalViewController {
         signalViewScrollBar.setDisable(true);
         signalViewScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (currentSound != null) {
+                currentOffset = newValue.intValue();
                 drawSignal(PageRetriever.retrieveSoundRange(
-                        currentSound, newValue.intValue(), Constants.DEFAULT_SIGNAL_VIEW_WIDTH));
+                        currentSound, currentOffset, Constants.DEFAULT_SIGNAL_VIEW_WIDTH));
             }
         });
     }
 
     @FXML
-    public void onButtonOpenAction(ActionEvent actionEvent) {
-        String audioFilePath = FileChooserDialog.selectFile(((MenuItem) actionEvent.getTarget())
-                .getParentPopup()
-                .getOwnerWindow());
+    public void onButtonOpenAction() {
+        openNewFile();
+    }
+
+    @Override
+    public void onKeyEvent(KeyEvent keyEvent) {
+        if (Constants.KeyCombinations.COMMAND_O.match(keyEvent)) {
+            openNewFile();
+        } else {
+            if (keyEvent.getCode() == KeyCode.RIGHT) {
+                shiftSignalView(Constants.Shift.RIGHT);
+            } else if (keyEvent.getCode() == KeyCode.LEFT) {
+                shiftSignalView(Constants.Shift.LEFT);
+            }
+        }
+    }
+
+    private void openNewFile() {
+        String audioFilePath = FileChooserDialog.selectFile(appMenu.getScene().getWindow());
 
         try {
             currentSound = soundRepository.loadFromFile(audioFilePath);
@@ -70,5 +86,16 @@ public class SignalViewController {
     private void drawSignal(int[] signalValues) {
         signalView.getData().clear();
         signalView.getData().add(ChartHelper.convertToChartSeries(signalValues));
+    }
+
+    private void shiftSignalView(int shiftLength) {
+        if (currentSound != null && (currentOffset + shiftLength) > 0 &&
+                (currentOffset + shiftLength) < (currentSound.getRawValues().length - Constants.DEFAULT_SIGNAL_VIEW_WIDTH)) {
+
+            currentOffset += shiftLength;
+            drawSignal(PageRetriever.retrieveSoundRange(
+                    currentSound, currentOffset, Constants.DEFAULT_SIGNAL_VIEW_WIDTH));
+            signalViewScrollBar.setValue(currentOffset);
+        }
     }
 }
