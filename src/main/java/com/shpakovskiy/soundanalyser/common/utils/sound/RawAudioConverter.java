@@ -3,8 +3,8 @@ package com.shpakovskiy.soundanalyser.common.utils.sound;
 public class RawAudioConverter {
 
     //TODO: Add JavaDoc
-    public static int[] retrieveSoundValues(byte[] rawAudioData, int sampleSizeBytes) {
-        int[] audioData = new int[rawAudioData.length / sampleSizeBytes];
+    public static double[] retrieveSoundValues(byte[] rawAudioData, int sampleSizeBytes) {
+        double[] audioData = new double[rawAudioData.length / sampleSizeBytes];
 
         for (int i = 0; i < rawAudioData.length / sampleSizeBytes; i++) {
             int singleValue = 0;

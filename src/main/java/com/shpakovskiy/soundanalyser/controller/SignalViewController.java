@@ -2,12 +2,14 @@ package com.shpakovskiy.soundanalyser.controller;
 
 import com.shpakovskiy.soundanalyser.common.Constants;
 import com.shpakovskiy.soundanalyser.common.components.FileChooserDialog;
+import com.shpakovskiy.soundanalyser.common.utils.math.FourierTransform;
 import com.shpakovskiy.soundanalyser.common.utils.sound.PageRetriever;
 import com.shpakovskiy.soundanalyser.common.utils.ui.ChartHelper;
 import com.shpakovskiy.soundanalyser.model.Sound;
 import com.shpakovskiy.soundanalyser.repository.DefaultSoundRepository;
 import com.shpakovskiy.soundanalyser.repository.SoundRepository;
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollBar;
@@ -23,15 +25,18 @@ public class SignalViewController implements KeyEventListener {
     public MenuBar appMenu;
 
     @FXML
-    public LineChart<Number, Number> signalView;
+    public BarChart<String, Number> signalView;
+
+    @FXML
+    public BarChart<String, Number> spectrumView;
 
     @FXML
     public ScrollBar signalViewScrollBar;
 
     @FXML
     public void initialize() {
-        signalView.setCreateSymbols(false);
         signalView.setLegendVisible(false);
+        spectrumView.setLegendVisible(false);
 
         signalViewScrollBar.setDisable(true);
         signalViewScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -66,7 +71,7 @@ public class SignalViewController implements KeyEventListener {
 
         try {
             currentSound = soundRepository.loadFromFile(audioFilePath);
-            int[] soundValues = currentSound.getRawValues();
+            double[] soundValues = currentSound.getRawValues();
 
             signalViewScrollBar.setMin(0);
             signalViewScrollBar.setValue(0);
@@ -83,9 +88,21 @@ public class SignalViewController implements KeyEventListener {
         }
     }
 
-    private void drawSignal(int[] signalValues) {
+    private void drawSignal(double[] signalValues) {
+        drawTimeDomainSignal(signalValues);
+        drawFrequencyDomainSignal(signalValues);
+    }
+
+    private void drawTimeDomainSignal(double[] signalValues) {
         signalView.getData().clear();
-        signalView.getData().add(ChartHelper.convertToChartSeries(signalValues));
+        signalView.getData().add(ChartHelper.convertToBarChartSeries(signalValues));
+    }
+
+    private void drawFrequencyDomainSignal(double[] signalValues) {
+        spectrumView.getData().clear();
+        spectrumView.getData().add(ChartHelper.convertToBarChartSeries(
+                FourierTransform.getFrequencySpectrum(signalValues)
+        ));
     }
 
     private void shiftSignalView(int shiftLength) {
