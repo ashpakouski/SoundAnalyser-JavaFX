@@ -3,6 +3,7 @@ module com.shpakovskiy.soundanalyser {
     requires javafx.fxml;
     requires java.desktop;
     requires commons.math3;
+    requires tritonus.all;
 
     opens com.shpakovskiy.soundanalyser to javafx.fxml;
     exports com.shpakovskiy.soundanalyser;
