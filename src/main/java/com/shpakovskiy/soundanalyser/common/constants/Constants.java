@@ -1,4 +1,4 @@
-package com.shpakovskiy.soundanalyser.common;
+package com.shpakovskiy.soundanalyser.common.constants;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;

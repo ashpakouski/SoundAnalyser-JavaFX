@@ -43,6 +43,11 @@
             <artifactId>commons-math3</artifactId>
             <version>3.6.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.soundlibs</groupId>
+            <artifactId>tritonus-all</artifactId>
+            <version>0.3.7.2</version>
+        </dependency>
     </dependencies>
 
     <build>
