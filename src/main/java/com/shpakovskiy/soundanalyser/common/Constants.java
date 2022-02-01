@@ -1,11 +1,11 @@
-package com.shpakovskiy.soundanalyser.common.constants;
+package com.shpakovskiy.soundanalyser.common;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
 public class Constants {
-    public static final int DEFAULT_SIGNAL_VIEW_WIDTH = 4096;
+    public static final int DEFAULT_SIGNAL_VIEW_WIDTH = 1024;
 
     public static final class KeyCombinations {
         public static final KeyCombination COMMAND_O =

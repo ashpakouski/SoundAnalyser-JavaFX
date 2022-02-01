@@ -14,9 +14,6 @@
             <Menu text="File">
                 <MenuItem text="Open (⌘O)" onAction="#onButtonOpenAction"/>
             </Menu>
-            <Menu text="Signal">
-                <MenuItem text="Recognize source" onAction="#onButtonRecognizeSourceAction"/>
-            </Menu>
         </MenuBar>
     </top>
 
