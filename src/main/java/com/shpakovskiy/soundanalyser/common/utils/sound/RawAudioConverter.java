@@ -1,5 +1,7 @@
 package com.shpakovskiy.soundanalyser.common.utils.sound;
 
+import java.util.Arrays;
+
 public class RawAudioConverter {
 
     //TODO: Add JavaDoc
@@ -20,6 +22,16 @@ public class RawAudioConverter {
             audioData[i] = singleValue;
         }
 
-        return audioData;
+        return normalize(audioData, Byte.MAX_VALUE);
+    }
+
+    public static double[] normalize(double[] rawValues, long adjustTo) {
+        double maxValue = Arrays.stream(rawValues).max().orElse(0);
+
+        for (int i = 0; i < rawValues.length; i++) {
+            rawValues[i] = rawValues[i] / maxValue * adjustTo;
+        }
+
+        return rawValues;
     }
 }

@@ -1,16 +1,16 @@
 package com.shpakovskiy.soundanalyser.model;
 
 public class MatchFrame {
-    private final int time;
+    private final int windowId;
     private final int songId;
 
-    public MatchFrame(int songId, int time) {
+    public MatchFrame(int songId, int windowId) {
         this.songId = songId;
-        this.time = time;
+        this.windowId = windowId;
     }
 
-    public int getTime() {
-        return time;
+    public int getWindowId() {
+        return windowId;
     }
 
     public int getSongId() {
