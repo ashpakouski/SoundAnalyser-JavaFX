@@ -6,13 +6,17 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.layout.*?>
+
 <BorderPane fx:controller="com.shpakovskiy.soundanalyser.controller.SignalViewController"
             xmlns:fx="http://javafx.com/fxml">
 
     <top>
         <MenuBar fx:id="appMenu">
             <Menu text="File">
-                <MenuItem text="Open (⌘O)" onAction="#onButtonOpenAction"/>
+                <MenuItem text="Open (⌘O)" onAction="#onOpenFileAction"/>
+            </Menu>
+            <Menu text="Signal">
+                <MenuItem text="Recognize source" onAction="#onRecognizeMelodicSourceAction"/>
             </Menu>
         </MenuBar>
     </top>
@@ -27,7 +31,6 @@
                       GridPane.rowIndex="0">
                 <xAxis>
                     <CategoryAxis prefHeight="20.0" prefWidth="Infinity" side="BOTTOM"/>
-                    <!--                    <NumberAxis prefWidth="Infinity" side="BOTTOM"/>-->
                 </xAxis>
                 <yAxis>
                     <NumberAxis prefHeight="Infinity" side="LEFT" prefWidth="50.0"/>
@@ -54,24 +57,3 @@
         <ScrollBar fx:id="signalViewScrollBar"/>
     </bottom>
 </BorderPane>
-
-        <!--<VBox fx:controller="com.shpakovskiy.soundanalyser.controller.SignalViewController"-->
-        <!--      xmlns:fx="http://javafx.com/fxml">-->
-
-        <!--    <MenuBar fx:id="appMenu">-->
-        <!--        <Menu text="File">-->
-        <!--            <MenuItem text="Open" onAction="#onButtonOpenAction"/>-->
-        <!--        </Menu>-->
-        <!--    </MenuBar>-->
-
-        <!--    <Pane prefHeight="500.0" prefWidth="1000.0">-->
-        <!--        <LineChart fx:id="signalView" animated="false" prefHeight="500.0" prefWidth="1000.0">-->
-        <!--            <xAxis>-->
-        <!--                <NumberAxis prefWidth="Infinity" side="BOTTOM"/>-->
-        <!--            </xAxis>-->
-        <!--            <yAxis>-->
-        <!--                <NumberAxis prefHeight="Infinity" side="LEFT"/>-->
-        <!--            </yAxis>-->
-        <!--        </LineChart>-->
-        <!--    </Pane>-->
-        <!--</VBox>-->

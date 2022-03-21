@@ -17,6 +17,7 @@ public class DefaultSoundRepository implements SoundRepository {
 
     @Override
     public Sound loadFromFile(String filePath) throws IOException, UnsupportedAudioFileException {
+        System.out.println("Trying to load: " + filePath);
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
 
         int sampleSizeBits = audioInputStream.getFormat().getSampleSizeInBits();
@@ -40,9 +41,24 @@ public class DefaultSoundRepository implements SoundRepository {
     //FIXME: Method is big enough. Take measures to split it according to sub-responsibilities.
     //FIXME: STREAMS ARE NOT CLOSED AT THE MOMENT!
     //TODO: Adapt for proper multithreading support.
+
+    /**
+     * This method accepts path to the sound file and returns formatted raw values via SoundRetrievingListener callback.
+     */
     @Override
     public void loadRawValues(String soundFilePath, SoundRetrievingListener soundRetrievingListener) {
         try {
+            /*
+            double[] doubleValues = loadFromFile(soundFilePath).getRawValues();
+            byte[] doubleBytes = new byte[doubleValues.length];
+
+            for (int i = 0; i < doubleValues.length; i++) {
+                doubleBytes[i] = (byte) doubleValues[i];
+            }
+
+            soundRetrievingListener.onSoundRetrieved(doubleBytes);
+             */
+
             AudioInputStream audioFileRawInputStream = AudioSystem.getAudioInputStream(new File(soundFilePath));
             AudioFormat baseFormat = audioFileRawInputStream.getFormat();
             AudioFormat readFormat = SuitableFormat.getReadFormat(baseFormat);
@@ -56,7 +72,8 @@ public class DefaultSoundRepository implements SoundRepository {
             // Consider finding a replacement or use custom implementation, as was done above.
             PCM2PCMConversionProvider conversionProvider = new PCM2PCMConversionProvider();
             if (!conversionProvider.isConversionSupported(SuitableFormat.getProcessingFormat(), readFormat)) {
-                soundRetrievingListener.onSoundRetrieved(null);
+                System.err.println("Audio format conversion is not supported.");
+                soundRetrievingListener.onSoundRetrieved(new byte[0]); //FIXME
                 return;
             }
 
@@ -82,12 +99,12 @@ public class DefaultSoundRepository implements SoundRepository {
                 soundRetrievingListener.onSoundRetrieved(outputStream.toByteArray());
             } catch (IOException e) {
                 e.printStackTrace();
-                soundRetrievingListener.onSoundRetrieved(null);
+                soundRetrievingListener.onSoundRetrieved(new byte[0]); //FIXME
             }
             //}).start();
         } catch (IOException | UnsupportedAudioFileException e) {
             e.printStackTrace();
-            soundRetrievingListener.onSoundRetrieved(null);
+            soundRetrievingListener.onSoundRetrieved(new byte[0]); //FIXME
         }
     }
 
@@ -111,12 +128,19 @@ public class DefaultSoundRepository implements SoundRepository {
             byte[] buffer = new byte[1024]; //TODO: Move constants to the place for constants.
 
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                for (int i = 0; (i < 1024) && isRecordingSound; i++) {
+                for (int i = 0; (i < 256) && isRecordingSound; i++) {
                     int count = targetDataLine.read(buffer, 0, 1024);
 
                     if (count > 0) {
                         outputStream.write(buffer, 0, count);
                     }
+
+                    int bbc = 0;
+                    for (byte b : buffer) {
+                        bbc += b;
+                    }
+
+                    System.out.println("Still recording: " + i + "; b = " + bbc);
                 }
 
                 soundRetrievingListener.onSoundRetrieved(outputStream.toByteArray());

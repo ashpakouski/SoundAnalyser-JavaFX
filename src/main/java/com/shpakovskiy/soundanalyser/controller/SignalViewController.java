@@ -1,9 +1,10 @@
 package com.shpakovskiy.soundanalyser.controller;
 
-import com.shpakovskiy.soundanalyser.common.constants.Constants;
 import com.shpakovskiy.soundanalyser.common.components.FileChooserDialog;
+import com.shpakovskiy.soundanalyser.common.constants.Constants;
 import com.shpakovskiy.soundanalyser.common.utils.math.FourierTransform;
 import com.shpakovskiy.soundanalyser.common.utils.sound.PageRetriever;
+import com.shpakovskiy.soundanalyser.common.utils.sound.SoundRecognizer;
 import com.shpakovskiy.soundanalyser.common.utils.ui.ChartHelper;
 import com.shpakovskiy.soundanalyser.model.Sound;
 import com.shpakovskiy.soundanalyser.repository.DefaultSoundRepository;
@@ -19,6 +20,7 @@ public class SignalViewController implements KeyEventListener {
 
     private final SoundRepository soundRepository = new DefaultSoundRepository();
     private Sound currentSound;
+    private String currentSoundPath = null;
     private int currentOffset = 0;
 
     @FXML
@@ -49,7 +51,7 @@ public class SignalViewController implements KeyEventListener {
     }
 
     @FXML
-    private void onButtonOpenAction() {
+    private void onOpenFileAction() {
         openNewFile();
     }
 
@@ -68,6 +70,8 @@ public class SignalViewController implements KeyEventListener {
 
     private void openNewFile() {
         String audioFilePath = FileChooserDialog.selectFile(appMenu.getScene().getWindow());
+
+        currentSoundPath = audioFilePath;
 
         if (audioFilePath != null) {
             try {
@@ -119,7 +123,11 @@ public class SignalViewController implements KeyEventListener {
     }
 
     @FXML
-    public void onButtonRecognizeSourceAction() {
-        System.out.println("Recognize source");
+    public void onRecognizeMelodicSourceAction() {
+        SoundRecognizer soundRecognizer = new SoundRecognizer(FileChooserDialog.selectFolderFiles());
+        soundRecognizer.loadSoundRecordings();
+
+        //soundRepository.recordSound(soundRecognizer::getBestMatch);
+        soundRecognizer.getBestMatch(currentSoundPath);
     }
 }
