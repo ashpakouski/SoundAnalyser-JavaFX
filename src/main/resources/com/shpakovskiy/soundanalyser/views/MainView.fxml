@@ -50,6 +50,20 @@
                     <NumberAxis prefHeight="Infinity" side="LEFT" prefWidth="50.0"/>
                 </yAxis>
             </BarChart>
+
+            <BarChart fx:id="distributionDensityView"
+                      animated="false"
+                      GridPane.hgrow="always"
+                      GridPane.vgrow="always"
+                      GridPane.columnIndex="0"
+                      GridPane.rowIndex="2">
+                <xAxis>
+                    <CategoryAxis prefHeight="20.0" prefWidth="Infinity" side="BOTTOM"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis prefHeight="Infinity" side="LEFT" prefWidth="50.0"/>
+                </yAxis>
+            </BarChart>
         </GridPane>
     </center>
 
