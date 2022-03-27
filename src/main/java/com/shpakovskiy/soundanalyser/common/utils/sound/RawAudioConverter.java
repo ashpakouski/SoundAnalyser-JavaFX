@@ -1,6 +1,7 @@
 package com.shpakovskiy.soundanalyser.common.utils.sound;
 
 import java.util.Arrays;
+import java.util.function.DoubleUnaryOperator;
 
 public class RawAudioConverter {
 
@@ -26,7 +27,9 @@ public class RawAudioConverter {
     }
 
     public static double[] normalize(double[] rawValues, long adjustTo) {
-        double maxValue = Arrays.stream(rawValues).max().orElse(0);
+        double maxValue = Arrays.stream(rawValues).map(Math::abs).max().orElse(0);
+
+        System.out.println(">>> MAX = " + maxValue);
 
         for (int i = 0; i < rawValues.length; i++) {
             rawValues[i] = rawValues[i] / maxValue * adjustTo;

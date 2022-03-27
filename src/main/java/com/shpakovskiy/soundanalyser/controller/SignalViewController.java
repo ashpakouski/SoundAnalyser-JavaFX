@@ -33,12 +33,16 @@ public class SignalViewController implements KeyEventListener {
     private BarChart<String, Number> spectrumView;
 
     @FXML
+    private BarChart<String, Number> distributionDensityView;
+
+    @FXML
     private ScrollBar signalViewScrollBar;
 
     @FXML
     private void initialize() {
         signalView.setLegendVisible(false);
         spectrumView.setLegendVisible(false);
+        distributionDensityView.setLegendVisible(false);
 
         signalViewScrollBar.setDisable(true);
         signalViewScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -88,10 +92,17 @@ public class SignalViewController implements KeyEventListener {
                 signalViewScrollBar.setDisable(soundValues.length <= Constants.DEFAULT_SIGNAL_VIEW_WIDTH);
 
                 drawSignal(PageRetriever.retrieveSoundRange(currentSound, 0, Constants.DEFAULT_SIGNAL_VIEW_WIDTH));
+
+                drawDistributionDensitySignal(PageRetriever.getDistributionDensity(currentSound));
             } catch (Exception e) {
                 e.printStackTrace(); //TODO: Replace with logger and show message for user
             }
         }
+    }
+
+    private void drawDistributionDensitySignal(double[] signalValues) {
+        distributionDensityView.getData().clear();
+        distributionDensityView.getData().add(ChartHelper.convertToBarChartSeries(signalValues));
     }
 
     private void drawSignal(double[] signalValues) {

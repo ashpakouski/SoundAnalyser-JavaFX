@@ -31,9 +31,9 @@ public class SoundRecognizer {
     public void loadSoundRecordings() {
         for (int i = 0; i < audioSourceFiles.size(); i++) {
             final int constId = i;
-            System.out.println("Trying to load: " + audioSourceFiles.get(constId));
+            //System.out.println("Trying to load: " + audioSourceFiles.get(constId));
             soundRepository.loadRawValues(audioSourceFiles.get(constId), soundValues -> {
-                System.out.println("Loaded [" + constId + "]: " + audioSourceFiles.get(constId) + " -> " + soundValues.length);
+                //System.out.println("Loaded [" + constId + "]: " + audioSourceFiles.get(constId) + " -> " + soundValues.length);
 
                 // 1. Retrieve spectrum of every window in soundValues
                 Complex[][] windowSpectra = getSignalSpectra(soundValues);
