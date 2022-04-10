@@ -9,6 +9,8 @@ import javax.sound.sampled.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 //TODO: Introduce one more level of abstraction or split the implementations.
 //TODO: Add JavaDoc.
@@ -18,24 +20,45 @@ public class DefaultSoundRepository implements SoundRepository {
     @Override
     public Sound loadFromFile(String filePath) throws IOException, UnsupportedAudioFileException {
         System.out.println("Trying to load: " + filePath);
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
 
-        int sampleSizeBits = audioInputStream.getFormat().getSampleSizeInBits();
+        String fileExtension = filePath.split("\\.")[1];
+        System.out.println("File extension: " + fileExtension);
 
-        if (sampleSizeBits % Byte.SIZE != 0) {
-            throw new UnsupportedAudioFileException(
-                    "Audio files with sample size of " + sampleSizeBits + " bits " +
-                            "(what is not a multiple of " + Byte.SIZE + ") are not supported");
+        if (fileExtension.equalsIgnoreCase("wav")) {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
+
+            int sampleSizeBits = audioInputStream.getFormat().getSampleSizeInBits();
+
+            System.out.println("Audio files with sample size of " + sampleSizeBits + " bits " +
+                    "(what is not a multiple of " + Byte.SIZE + ")");
+
+            if (sampleSizeBits % Byte.SIZE != 0) {
+                throw new UnsupportedAudioFileException(
+                        "Audio files with sample size of " + sampleSizeBits + " bits " +
+                                "(what is not a multiple of " + Byte.SIZE + ") are not supported");
+            }
+
+            int sampleSizeBytes = sampleSizeBits / Byte.SIZE;
+            byte[] rawAudioData = audioInputStream.readAllBytes();
+
+            return new Sound(
+                    audioInputStream.getFormat().getSampleRate(),
+                    sampleSizeBytes,
+                    RawAudioConverter.retrieveSoundValues(rawAudioData, sampleSizeBytes)
+            );
+        } else if (fileExtension.equalsIgnoreCase("pcm")) {
+            int sampleSizeBits = 16;
+            int sampleSizeBytes = sampleSizeBits / Byte.SIZE;
+            byte[] rawAudioData = Files.readAllBytes(Paths.get(filePath));
+
+            return new Sound(
+                    44000,
+                    sampleSizeBytes,
+                    RawAudioConverter.retrieveSoundValues(rawAudioData, sampleSizeBytes)
+            );
         }
 
-        int sampleSizeBytes = sampleSizeBits / Byte.SIZE;
-        byte[] rawAudioData = audioInputStream.readAllBytes();
-
-        return new Sound(
-                audioInputStream.getFormat().getSampleRate(),
-                sampleSizeBytes,
-                RawAudioConverter.retrieveSoundValues(rawAudioData, sampleSizeBytes)
-        );
+        return null;
     }
 
     //FIXME: Method is big enough. Take measures to split it according to sub-responsibilities.
@@ -48,17 +71,6 @@ public class DefaultSoundRepository implements SoundRepository {
     @Override
     public void loadRawValues(String soundFilePath, SoundRetrievingListener soundRetrievingListener) {
         try {
-            /*
-            double[] doubleValues = loadFromFile(soundFilePath).getRawValues();
-            byte[] doubleBytes = new byte[doubleValues.length];
-
-            for (int i = 0; i < doubleValues.length; i++) {
-                doubleBytes[i] = (byte) doubleValues[i];
-            }
-
-            soundRetrievingListener.onSoundRetrieved(doubleBytes);
-             */
-
             AudioInputStream audioFileRawInputStream = AudioSystem.getAudioInputStream(new File(soundFilePath));
             AudioFormat baseFormat = audioFileRawInputStream.getFormat();
             AudioFormat readFormat = SuitableFormat.getReadFormat(baseFormat);

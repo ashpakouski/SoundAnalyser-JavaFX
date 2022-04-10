@@ -18,6 +18,7 @@
 
 *.wav
 *.wa1v
+*.pcm
 
 # IntelliJ
 out/
