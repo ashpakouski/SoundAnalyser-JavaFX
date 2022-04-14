@@ -13,9 +13,9 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
 
-public class SoundRecognizer {
+public class SoundRecognizer implements SoundSourceRecognizer {
     private final SoundRepository soundRepository = new DefaultSoundRepository();
-    private final List<String> audioSourceFiles;
+    private final List<String> audioSourceFiles = new ArrayList<>();
     private final Map<String, List<MatchFrame>> windowMatches = new HashMap<>();
 
     public static final int FOURIER_WINDOW_SIZE = 4096;
@@ -24,23 +24,27 @@ public class SoundRecognizer {
             10, 30, 50, 70, 90, 110
     };
 
-    public SoundRecognizer(List<String> audioSourceFiles) {
-        this.audioSourceFiles = audioSourceFiles;
-    }
+    @Override
+    public void loadBaseRecordings(List<String> audioSourceFiles) {
+        this.audioSourceFiles.clear();
+        this.audioSourceFiles.addAll(audioSourceFiles); // FIXME: I don't like this approach
 
-    public void loadSoundRecordings() {
         for (int i = 0; i < audioSourceFiles.size(); i++) {
             final int constId = i;
             //System.out.println("Trying to load: " + audioSourceFiles.get(constId));
-            soundRepository.loadRawValues(audioSourceFiles.get(constId), soundValues -> {
-                //System.out.println("Loaded [" + constId + "]: " + audioSourceFiles.get(constId) + " -> " + soundValues.length);
+            soundRepository.loadSound(audioSourceFiles.get(constId), sound -> {
+                if (sound != null) {
+                    //System.out.println("Loaded [" + constId + "]: " + audioSourceFiles.get(constId) + " -> " + sound.getRawValues().length);
 
-                // 1. Retrieve spectrum of every window in soundValues
-                Complex[][] windowSpectra = getSignalSpectra(soundValues);
+                    // 1. Retrieve spectrum of every window in soundValues
+                    Complex[][] windowSpectra = getSignalSpectra(sound.getRawValues());
 
-                // 2. Analyze it and add save necessary information TODO
-                addSoundInfo(windowSpectra, constId);
-                System.out.println("[" + constId + "] " + audioSourceFiles.get(constId) + " -> Done");
+                    // 2. Analyze it and add save necessary information TODO
+                    addSoundInfo(windowSpectra, constId);
+                    //System.out.println("[" + constId + "] " + audioSourceFiles.get(constId) + " -> Done");
+                } else {
+                    System.out.println("Failed to load [" + constId + "]");
+                }
             });
         }
     }
@@ -85,7 +89,7 @@ public class SoundRecognizer {
     }
 
     // Find out in which range
-    public int getFrequencyIndex(int harmonicFrequency) {
+    private int getFrequencyIndex(int harmonicFrequency) {
         int frequencyIndex = 0;
 
         while (FREQUENCY_RANGE[frequencyIndex] < harmonicFrequency) {
@@ -164,11 +168,13 @@ public class SoundRecognizer {
         return matchMap;
     }
 
+    // TODO: Move execution to separate thread and implement callback for value returning
+    @Override
     public void getBestMatch(String fileForMatch) {
-        soundRepository.loadRawValues(fileForMatch, this::getBestMatch);
+        soundRepository.loadSound(fileForMatch, sound -> getBestMatch(sound.getRawValues()));
     }
 
-    public void getBestMatch(byte[] soundValues) {
+    public void getBestMatch(double[] soundValues) {
         int bestCount = 0;
         int bestSong = -1;
 
@@ -225,7 +231,7 @@ public class SoundRecognizer {
      * This method accepts raw sound values, splits it to the windows of equal size (fourierWindowSize) and
      * retrieves spectrum for each of them.
      */
-    private Complex[][] getSignalSpectra(byte[] soundValues) {
+    private Complex[][] getSignalSpectra(double[] soundValues) {
         if (soundValues != null) {
             int soundLengthBytes = soundValues.length;
             int windowsNumber = soundLengthBytes / FOURIER_WINDOW_SIZE; //Yes, it doesn't include short "tail"

@@ -2,8 +2,6 @@ package com.shpakovskiy.soundanalyser.common.utils.sound;
 
 import com.shpakovskiy.soundanalyser.model.Sound;
 
-import java.util.Map;
-
 public class PageRetriever {
 
     //TODO: Think of better name

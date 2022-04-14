@@ -5,6 +5,7 @@ import com.shpakovskiy.soundanalyser.common.constants.Constants;
 import com.shpakovskiy.soundanalyser.common.utils.math.FourierTransform;
 import com.shpakovskiy.soundanalyser.common.utils.sound.PageRetriever;
 import com.shpakovskiy.soundanalyser.common.utils.sound.SoundRecognizer;
+import com.shpakovskiy.soundanalyser.common.utils.sound.SoundSourceRecognizer;
 import com.shpakovskiy.soundanalyser.common.utils.ui.ChartHelper;
 import com.shpakovskiy.soundanalyser.model.Sound;
 import com.shpakovskiy.soundanalyser.repository.DefaultSoundRepository;
@@ -79,21 +80,23 @@ public class SignalViewController implements KeyEventListener {
 
         if (audioFilePath != null) {
             try {
-                currentSound = soundRepository.loadFromFile(audioFilePath);
-                double[] soundValues = currentSound.getRawValues();
+                //currentSound = soundRepository.loadFromFile(audioFilePath);
+                soundRepository.loadSound(audioFilePath, sound -> {
+                    currentSound = sound;
 
-                signalViewScrollBar.setMin(0);
-                signalViewScrollBar.setValue(0);
+                    signalViewScrollBar.setMin(0);
+                    signalViewScrollBar.setValue(0);
 
-                if (soundValues.length > Constants.DEFAULT_SIGNAL_VIEW_WIDTH) {
-                    signalViewScrollBar.setMax(soundValues.length - Constants.DEFAULT_SIGNAL_VIEW_WIDTH);
-                }
+                    if (sound.getRawValues().length > Constants.DEFAULT_SIGNAL_VIEW_WIDTH) {
+                        signalViewScrollBar.setMax(sound.getRawValues().length - Constants.DEFAULT_SIGNAL_VIEW_WIDTH);
+                    }
 
-                signalViewScrollBar.setDisable(soundValues.length <= Constants.DEFAULT_SIGNAL_VIEW_WIDTH);
+                    signalViewScrollBar.setDisable(sound.getRawValues().length <= Constants.DEFAULT_SIGNAL_VIEW_WIDTH);
 
-                drawSignal(PageRetriever.retrieveSoundRange(currentSound, 0, Constants.DEFAULT_SIGNAL_VIEW_WIDTH));
+                    drawSignal(PageRetriever.retrieveSoundRange(sound, 0, Constants.DEFAULT_SIGNAL_VIEW_WIDTH));
 
-                drawDistributionDensitySignal(PageRetriever.getDistributionDensity(currentSound));
+                    drawDistributionDensitySignal(PageRetriever.getDistributionDensity(sound));
+                });
             } catch (Exception e) {
                 e.printStackTrace(); //TODO: Replace with logger and show message for user
             }
@@ -135,8 +138,8 @@ public class SignalViewController implements KeyEventListener {
 
     @FXML
     public void onRecognizeMelodicSourceAction() {
-        SoundRecognizer soundRecognizer = new SoundRecognizer(FileChooserDialog.selectFolderFiles());
-        soundRecognizer.loadSoundRecordings();
+        SoundSourceRecognizer soundRecognizer = new SoundRecognizer();
+        soundRecognizer.loadBaseRecordings(FileChooserDialog.selectFolderFiles());
 
         //soundRepository.recordSound(soundRecognizer::getBestMatch);
         soundRecognizer.getBestMatch(currentSoundPath);

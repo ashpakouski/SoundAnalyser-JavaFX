@@ -33,13 +33,11 @@ public class FileChooserDialog {
         String folderPath = folder.getAbsolutePath();
         String[] folderFileNames = folder.list();
 
-        if (folderFileNames != null && (folderFileNames.length > 0)){
+        if (folderFileNames != null && (folderFileNames.length > 0)) {
             List<String> folderFiles = new ArrayList<>();
 
             for (String folderFileName : folderFileNames) {
-                if (folderFileName.toUpperCase().contains(".WAV")) {
-                    folderFiles.add(folderPath + File.separator + folderFileName);
-                }
+                folderFiles.add(folderPath + File.separator + folderFileName);
             }
 
             return folderFiles;

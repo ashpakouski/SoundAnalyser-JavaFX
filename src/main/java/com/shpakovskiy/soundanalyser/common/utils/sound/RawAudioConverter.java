@@ -1,9 +1,18 @@
 package com.shpakovskiy.soundanalyser.common.utils.sound;
 
 import java.util.Arrays;
-import java.util.function.DoubleUnaryOperator;
 
 public class RawAudioConverter {
+
+    public static double[] justToDouble(byte[] rawAudioData) {
+        double[] audioData = new double[rawAudioData.length];
+
+        for (int i = 0; i < audioData.length; i++) {
+            audioData[i] = rawAudioData[i];
+        }
+
+        return audioData;
+    }
 
     //TODO: Add JavaDoc
     public static double[] retrieveSoundValues(byte[] rawAudioData, int sampleSizeBytes) {
