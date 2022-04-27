@@ -21,7 +21,10 @@ public class SoundRecognizer implements SoundSourceRecognizer {
     public static final int FOURIER_WINDOW_SIZE = 4096;
 
     private final int[] FREQUENCY_RANGE = new int[]{
+//            100, 150, 200, 250, 300, 350
             10, 30, 50, 70, 90, 110
+//            30, 60, 90, 120
+            // 10, 40, 70, 100, 130, 140
     };
 
     @Override
@@ -54,6 +57,7 @@ public class SoundRecognizer implements SoundSourceRecognizer {
 
         for (int windowId = 0; windowId < windowSpectra.length; windowId++) { //Enumerating windows
             String windowHash = getWindowHash(windowSpectra[windowId], amplitudeFrequencies[windowId]);
+            System.out.println("Hash: " + windowHash);
             addHash(windowHash, (int) songId, windowId);
         }
     }

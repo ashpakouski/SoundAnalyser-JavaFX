@@ -11,7 +11,7 @@ public class RawAudioConverter {
             audioData[i] = rawAudioData[i];
         }
 
-        return audioData;
+        return normalize(audioData, Byte.MAX_VALUE);
     }
 
     //TODO: Add JavaDoc

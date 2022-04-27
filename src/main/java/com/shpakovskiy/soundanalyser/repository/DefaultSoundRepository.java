@@ -15,9 +15,7 @@ import java.nio.file.Paths;
 public class DefaultSoundRepository implements SoundRepository {
     private boolean isRecordingSound = false; //Honestly, doesn't look like a nice idea
 
-    /*
-    @Override
-    public Sound loadFromFile(String filePath) throws IOException, UnsupportedAudioFileException {
+    public Sound loadFromFile1(String filePath) throws IOException, UnsupportedAudioFileException {
         System.out.println("Trying to load: " + filePath);
 
         String fileExtension = filePath.split("\\.")[1];
@@ -29,8 +27,7 @@ public class DefaultSoundRepository implements SoundRepository {
 
             int sampleSizeBits = audioInputStream.getFormat().getSampleSizeInBits();
 
-            System.out.println("Audio files with sample size of " + sampleSizeBits + " bits " +
-                    "(what is not a multiple of " + Byte.SIZE + ")");
+            // System.out.println("Audio files with sample size of " + sampleSizeBits + " bits " + "(what is not a multiple of " + Byte.SIZE + ")");
 
             if (sampleSizeBits % Byte.SIZE != 0) {
                 throw new UnsupportedAudioFileException(
@@ -60,7 +57,6 @@ public class DefaultSoundRepository implements SoundRepository {
 
         return null;
     }
-     */
 
     /*
     @Override
@@ -93,7 +89,10 @@ public class DefaultSoundRepository implements SoundRepository {
             AudioInputStream audioFileRawInputStream = null;
 
             if (fileExtension.equalsIgnoreCase("wav") || fileExtension.equalsIgnoreCase("wa1v")) {
-                audioFileRawInputStream = AudioSystem.getAudioInputStream(new File(soundFilePath));
+                soundRetrievingListener.onSoundRetrieved(loadFromFile1(soundFilePath));
+                // audioFileRawInputStream = AudioSystem.getAudioInputStream(new File(soundFilePath));
+
+                return;
             } else if (fileExtension.equalsIgnoreCase("pcm")) {
                 byte[] rawAudioData = Files.readAllBytes(Paths.get(soundFilePath));
                 AudioFormat audioFormat = new AudioFormat(44100, 16, 1, true, true);

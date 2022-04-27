@@ -18,7 +18,6 @@ public class PageRetriever {
         double[] distributionDensity = new double[Byte.MAX_VALUE * 2 + 1];
 
         for (double currentAmplitude : sound.getRawValues()) {
-            //System.out.println(">>> AMP = " + currentAmplitude);
             distributionDensity[(int) (Math.abs(currentAmplitude))]++;
         }
 
