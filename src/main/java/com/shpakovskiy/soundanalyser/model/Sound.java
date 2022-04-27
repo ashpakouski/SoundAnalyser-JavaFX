@@ -1,13 +1,15 @@
 package com.shpakovskiy.soundanalyser.model;
 
+import java.util.Arrays;
+
 public class Sound {
     private final float sampleRate;
-    private final int sampleSizeBytes; //In some sources "Sample size" is called "Bit depth"
+    private final int sampleSizeBits; //In some sources "Sample size" is called "Bit depth"
     private final double[] rawValues;
 
-    public Sound(float sampleRate, int sampleSizeBytes, double[] rawValues) {
+    public Sound(float sampleRate, int sampleSizeBits, double[] rawValues) {
         this.sampleRate = sampleRate;
-        this.sampleSizeBytes = sampleSizeBytes;
+        this.sampleSizeBits = sampleSizeBits;
         this.rawValues = rawValues;
     }
 
@@ -15,11 +17,20 @@ public class Sound {
         return sampleRate;
     }
 
-    public int getSampleSizeBytes() {
-        return sampleSizeBytes;
+    public int getSampleSizeBits() {
+        return sampleSizeBits;
     }
 
     public double[] getRawValues() {
         return rawValues;
+    }
+
+    @Override
+    public String toString() {
+        return "Sound{" +
+                "sampleRate=" + sampleRate +
+                ", sampleSizeBits=" + sampleSizeBits +
+                ", rawValues=" + rawValues.length + " values" +
+                '}';
     }
 }

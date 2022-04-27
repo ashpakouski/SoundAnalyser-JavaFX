@@ -11,13 +11,10 @@ import java.util.List;
 
 //TODO: Enhance dialog with file extension filter / default path / etc.
 public class FileChooserDialog {
-    public static String selectFile() {
-        return selectFile(new Stage());
-    }
-
     public static String selectFile(Window parentWindow) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open new file");
+        fileChooser.setInitialDirectory(new File("src/main/resources/com/shpakovskiy/soundanalyser/rawSounds/baseSounds"));
         return fileChooser.showOpenDialog(parentWindow).getAbsolutePath();
     }
 
@@ -28,18 +25,17 @@ public class FileChooserDialog {
     public static List<String> selectFolderFiles(Window parentWindow) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select folder");
+        directoryChooser.setInitialDirectory(new File("src/main/resources/com/shpakovskiy/soundanalyser/rawSounds/baseSounds"));
 
         File folder = directoryChooser.showDialog(parentWindow);
         String folderPath = folder.getAbsolutePath();
         String[] folderFileNames = folder.list();
 
-        if (folderFileNames != null && (folderFileNames.length > 0)){
+        if (folderFileNames != null && (folderFileNames.length > 0)) {
             List<String> folderFiles = new ArrayList<>();
 
             for (String folderFileName : folderFileNames) {
-                if (folderFileName.toUpperCase().contains(".WAV")) {
-                    folderFiles.add(folderPath + File.separator + folderFileName);
-                }
+                folderFiles.add(folderPath + File.separator + folderFileName);
             }
 
             return folderFiles;
